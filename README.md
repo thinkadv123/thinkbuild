@@ -43,4 +43,11 @@ npm run build   # production build
 npm run lint
 ```
 
-Deploys to any Next.js host (Vercel recommended).
+## Deployment
+
+- **GitHub Pages**: every push to `main` runs `.github/workflows/pages.yml`, which builds a static export
+  (`PAGES_BASE_PATH=/thinkbuild npm run build` → `out/`) and publishes it to
+  https://thinkadv123.github.io/thinkbuild/. Static hosting can't do server redirects, so the legacy-URL
+  redirects only apply on a Next.js host.
+- **Any Next.js host** (e.g. Vercel): `npm run build` with no `PAGES_BASE_PATH` keeps image optimization and
+  the legacy WordPress redirects.

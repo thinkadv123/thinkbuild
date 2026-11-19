@@ -17,7 +17,20 @@ const legacyRedirects = [
   ...products.map((p) => ({ source: `/product/${p.legacySlug}`, destination: `/products/${p.category}/${p.slug}` })),
 ].map((r) => ({ ...r, permanent: true }));
 
+/**
+ * Set PAGES_BASE_PATH (e.g. "/thinkbuild") to produce a fully static export for GitHub Pages.
+ * Static exports can't use redirects or the built-in image optimizer, so those switch off.
+ */
+const pagesBasePath = process.env.PAGES_BASE_PATH;
+const isStaticExport = pagesBasePath !== undefined;
+
 const nextConfig: NextConfig = {
+  ...(isStaticExport && {
+    output: "export",
+    basePath: pagesBasePath || undefined,
+    trailingSlash: true,
+  }),
+  env: { NEXT_PUBLIC_BASE_PATH: pagesBasePath ?? "" },
   turbopack: {
     rules: {
       "*.css": {
@@ -26,13 +39,14 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  images: {
-    formats: ["image/avif", "image/webp"],
-    qualities: [75, 85],
-  },
-  async redirects() {
-    return legacyRedirects;
-  },
+  images: isStaticExport
+    ? { loader: "custom", loaderFile: "./lib/image-loader.ts" }
+    : { formats: ["image/avif", "image/webp"], qualities: [75, 85] },
+  ...(!isStaticExport && {
+    async redirects() {
+      return legacyRedirects;
+    },
+  }),
 };
 
 export default nextConfig;

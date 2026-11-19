@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { withBase } from "@/lib/base-path";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
@@ -97,7 +98,7 @@ export default async function ProductPage(props: PageProps<"/products/[category]
                 </a>
                 {p.datasheet && (
                   <a
-                    href={p.datasheet}
+                    href={withBase(p.datasheet)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3.5 font-display text-[13px] font-bold uppercase tracking-wider text-white transition hover:border-white hover:bg-white hover:text-ink"

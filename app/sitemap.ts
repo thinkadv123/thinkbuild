@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { categories, company, products, projects, services } from "@/lib/data";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const u = (path: string, priority = 0.7) => ({ url: `${company.url}${path}`, priority });
   return [
